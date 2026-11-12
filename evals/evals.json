@@ -1,0 +1,23 @@
+{
+  "skill_name": "code-anatomy",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Generate an interactive architecture map of ~/Projects/LaunchLens so a new contributor can understand how LaunchScanner, FreezeLedgerStore, and the SwiftUI views fit together.",
+      "expected_output": "Runs build_anatomy.py against ~/Projects/LaunchLens (optionally with semantic annotations.json), writes docs/architecture-anatomy.html, and summarizes the module count, core hub, and layer dependencies.",
+      "files": []
+    },
+    {
+      "id": 2,
+      "prompt": "帮我给 ~/Projects/agent-xray 生成一份离线可交互的 2.5D 代码架构全景图，排除测试文件，看看哪个模块是被依赖最多的核心枢纽。",
+      "expected_output": "Runs build_anatomy.py with --exclude-tests on ~/Projects/agent-xray, produces architecture-anatomy.html, and identifies store.py / classifier.py / proxy.py fan-in metrics.",
+      "files": []
+    },
+    {
+      "id": 3,
+      "prompt": "Map the module dependency graph of this TypeScript/Python repo into JSON and an offline HTML diagram without uploading anything to the cloud.",
+      "expected_output": "Runs build_anatomy.py with --json-out and --out locally, verifying zero external CDN links or leaked /Users host paths.",
+      "files": []
+    }
+  ]
+}
