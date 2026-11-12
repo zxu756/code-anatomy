@@ -872,9 +872,9 @@ const ctx = canvas.getContext("2d");
 const layerColor = Object.fromEntries((GRAPH.layers || []).map(l => [l.id, l.color]));
 const nodeById = Object.fromEntries((GRAPH.nodes || []).map(n => [n.id, n]));
 
-let camX = 32;
-let camY = 44;
-let zoom = 0.88;
+let camX = 14;
+let camY = 42;
+let zoom = 0.83;
 let selectedId = (GRAPH.tour && GRAPH.tour[0] && GRAPH.tour[0].module) || (GRAPH.nodes[0] && GRAPH.nodes[0].id) || null;
 let hoveredId = null;
 let tourIdx = 0;
@@ -1283,9 +1283,9 @@ function stepTour(delta) {{
 }}
 
 function resetCamera() {{
-  camX = 32;
-  camY = 44;
-  zoom = 0.88;
+  camX = 14;
+  camY = 42;
+  zoom = 0.83;
   draw();
 }}
 
