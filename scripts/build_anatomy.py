@@ -53,12 +53,12 @@ LANG_BY_EXT = {
 }
 
 LAYER_META = [
-    ("entry", "Entry & CLI", "#38bdf8", 0),
-    ("ui", "Views & UI", "#a78bfa", 1),
-    ("state", "State & Controllers", "#34d399", 2),
-    ("service", "Core & Services", "#f59e0b", 3),
-    ("model", "Models & Store", "#60a5fa", 4),
-    ("test", "Verification Suite", "#fb7185", 5),
+    ("entry", "Entry & CLI", "#2B5B84", 0),
+    ("ui", "Views & UI", "#4E6E5D", 1),
+    ("state", "State & Controllers", "#2E7D6B", 2),
+    ("service", "Core & Services", "#C85A32", 3),
+    ("model", "Models & Store", "#8B6B4A", 4),
+    ("test", "Verification Suite", "#6B5B7B", 5),
 ]
 LAYER_ORDER = {key: idx for idx, (key, _, _, _) in enumerate(LAYER_META)}
 
@@ -492,243 +492,377 @@ def render_anatomy_html(graph: dict[str, Any]) -> str:
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>{title_esc} — Code Anatomy 2.5D Architecture Map</title>
+<meta name="description" content="Interactive offline 2.5D isometric codebase architecture maquette and static dependency graph." />
+<title>{title_esc} · Code Anatomy 2.5D Architecture Maquette</title>
 <style>
+  /* Hallmark v2.0.0 | genre: editorial | scope: app | posture: restrained | modes: light+dark | data: sample */
+  /* critique: architectural vellum drafting table with mineral maquette blocks, collision-free callout pins, and hairline inspector sheets. */
   :root {{
-    --bg: #080f1a;
-    --hud: rgba(13, 22, 36, 0.92);
-    --hud-solid: #0d1624;
-    --border: #1e3048;
-    --ink: #eef5fc;
-    --muted: #889eb8;
-    --cyan: #38bdf8;
-    --amber: #fbbf24;
-    --emerald: #34d399;
+    color-scheme: light dark;
+    --font-sans: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Inter", system-ui, sans-serif;
+    --font-display: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Inter", system-ui, sans-serif;
+    --font-mono: "SF Mono", "JetBrains Mono", ui-monospace, Menlo, Consolas, monospace;
+
+    --color-paper: oklch(0.962 0.010 82);
+    --color-sheet: oklch(0.985 0.006 82);
+    --color-well: oklch(0.942 0.011 82);
+    --color-ink: oklch(0.205 0.012 65);
+    --color-ink-2: oklch(0.365 0.012 65);
+    --color-muted: oklch(0.485 0.012 65);
+    --color-rule: oklch(0.865 0.013 78);
+    --color-rule-strong: oklch(0.765 0.016 78);
+
+    --color-out: oklch(0.455 0.095 245);
+    --color-out-soft: oklch(0.455 0.095 245 / 0.12);
+    --color-in: oklch(0.555 0.165 38);
+    --color-in-soft: oklch(0.555 0.165 38 / 0.13);
+    --color-focus: oklch(0.555 0.165 38);
+    --color-selection: oklch(0.555 0.165 38 / 0.18);
+    --shadow-sheet: 0 2px 10px oklch(0.20 0.01 65 / 0.06);
+
+    --space-3xs: 2px;
+    --space-2xs: 4px;
+    --space-xs: 8px;
+    --space-sm: 12px;
+    --space-md: 16px;
+
+    --radius-sm: 4px;
+    --radius-md: 8px;
+    --radius-lg: 10px;
+
+    --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+    --dur-micro: 140ms;
   }}
+
+  [data-mode="dark"] {{
+    --color-paper: oklch(0.165 0.008 68);
+    --color-sheet: oklch(0.202 0.009 68);
+    --color-well: oklch(0.238 0.010 68);
+    --color-ink: oklch(0.938 0.008 78);
+    --color-ink-2: oklch(0.805 0.010 75);
+    --color-muted: oklch(0.665 0.012 72);
+    --color-rule: oklch(0.285 0.011 68);
+    --color-rule-strong: oklch(0.365 0.014 68);
+
+    --color-out: oklch(0.695 0.095 238);
+    --color-out-soft: oklch(0.695 0.095 238 / 0.18);
+    --color-in: oklch(0.705 0.155 42);
+    --color-in-soft: oklch(0.705 0.155 42 / 0.18);
+    --color-focus: oklch(0.705 0.155 42);
+    --color-selection: oklch(0.705 0.155 42 / 0.28);
+    --shadow-sheet: inset 0 0 0 1px oklch(0.305 0.012 68);
+  }}
+
   * {{ box-sizing: border-box; margin: 0; padding: 0; }}
+  ::selection {{ background: var(--color-selection); color: var(--color-ink); }}
+  html {{ scrollbar-color: var(--color-rule-strong) var(--color-paper); }}
   html, body {{
     width: 100%;
     height: 100%;
-    overflow: hidden;
-    background: var(--bg);
-    color: var(--ink);
-    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Inter", system-ui, sans-serif;
-    font-size: 12.5px;
-    font-variant-numeric: tabular-nums;
+    overflow-x: clip;
+    overflow-y: hidden;
+    background: var(--color-paper);
+    color: var(--color-ink);
+    font-family: var(--font-sans);
+    font-size: 16px;
+    line-height: 1.5;
+    font-synthesis: none;
+    -webkit-font-smoothing: antialiased;
     user-select: none;
   }}
-  .mono {{ font-family: "SF Mono", ui-monospace, Menlo, Consolas, monospace; }}
+  .mono {{
+    font-family: var(--font-mono);
+    font-variant-numeric: tabular-nums;
+  }}
+  :focus-visible {{
+    outline: 2px solid var(--color-focus);
+    outline-offset: 2px;
+  }}
+  button:disabled, input:disabled {{
+    opacity: 0.55;
+    cursor: not-allowed;
+  }}
+
   canvas {{
     position: fixed;
     inset: 0;
-    width: 100vw;
-    height: 100vh;
+    width: 100%;
+    height: 100%;
     cursor: grab;
   }}
   canvas:active {{ cursor: grabbing; }}
+
   .topbar {{
     position: fixed;
-    top: 14px;
-    left: 16px;
-    right: 16px;
+    top: var(--space-sm);
+    left: var(--space-md);
+    right: var(--space-md);
+    height: 56px;
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 11px 16px;
-    background: var(--hud);
-    border: 1px solid var(--border);
-    border-radius: 10px;
-    backdrop-filter: blur(10px);
-    z-index: 10;
+    padding: 0 var(--space-md);
+    background: var(--color-sheet);
+    border: 1px solid var(--color-rule);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-sheet);
+    z-index: 200;
+    gap: var(--space-md);
   }}
   .brand {{
     display: flex;
     align-items: center;
-    gap: 11px;
+    gap: var(--space-sm);
+    min-width: 0;
   }}
   .cube-badge {{
-    width: 28px;
-    height: 28px;
-    border-radius: 7px;
-    background: rgba(56, 189, 248, 0.16);
-    border: 1px solid rgba(56, 189, 248, 0.48);
+    width: 32px;
+    height: 32px;
+    border-radius: var(--radius-md);
+    background: var(--color-ink);
+    color: var(--color-sheet);
     display: grid;
     place-items: center;
-    color: var(--cyan);
     font-weight: 700;
-    font-size: 12px;
+    font-size: 11px;
+    flex-shrink: 0;
   }}
-  .brand h1 {{ font-size: 15px; font-weight: 600; }}
-  .brand p {{ font-size: 11.5px; color: var(--muted); }}
+  .brand-copy {{
+    display: flex;
+    align-items: baseline;
+    gap: var(--space-sm);
+    min-width: 0;
+  }}
+  .brand-copy h1 {{
+    font-family: var(--font-display);
+    font-size: 17px;
+    font-weight: 700;
+    letter-spacing: -0.025em;
+    line-height: 1.1;
+    white-space: nowrap;
+    text-wrap: balance;
+  }}
+  .brand-copy p {{
+    font-size: 13px;
+    color: var(--color-muted);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }}
+
   .controls {{
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: var(--space-xs);
+    flex-shrink: 0;
   }}
   .search {{
-    background: #08111d;
-    border: 1px solid var(--border);
-    border-radius: 6px;
-    color: var(--ink);
-    padding: 6px 10px;
-    font-size: 12px;
-    width: 200px;
-    outline: none;
+    background: var(--color-well);
+    border: 1px solid var(--color-rule);
+    border-radius: var(--radius-md);
+    color: var(--color-ink);
+    font-family: var(--font-sans);
+    height: 36px;
+    padding: 0 var(--space-sm);
+    font-size: 13px;
+    width: 208px;
   }}
+  .search::placeholder {{ color: var(--color-muted); }}
   .btn {{
-    background: #132033;
-    border: 1px solid var(--border);
-    color: var(--ink);
-    padding: 6px 10px;
-    border-radius: 6px;
-    font-size: 11.5px;
+    appearance: none;
+    background: transparent;
+    border: 1px solid var(--color-rule);
+    color: var(--color-ink);
+    font-family: var(--font-sans);
+    height: 36px;
+    padding: 0 var(--space-sm);
+    border-radius: var(--radius-md);
+    font-size: 13px;
     font-weight: 500;
     cursor: pointer;
+    transition: transform var(--dur-micro) var(--ease-out), border-color var(--dur-micro) var(--ease-out), background-color var(--dur-micro) var(--ease-out);
   }}
-  .btn:hover {{ border-color: rgba(56, 189, 248, 0.55); }}
+  .btn:active {{ transform: scale(0.97); }}
+  @media (hover: hover) and (pointer: fine) {{
+    .btn:hover {{
+      border-color: var(--color-rule-strong);
+      background: var(--color-well);
+    }}
+  }}
+  .btn-sm {{
+    height: 32px;
+    font-size: 12.5px;
+  }}
+
   .left-dock {{
     position: fixed;
-    top: 78px;
-    left: 16px;
+    top: 80px;
+    left: var(--space-md);
     width: 276px;
     display: flex;
     flex-direction: column;
-    gap: 12px;
-    z-index: 10;
+    gap: var(--space-sm);
+    z-index: 100;
   }}
-  .card {{
-    background: var(--hud);
-    border: 1px solid var(--border);
-    border-radius: 10px;
-    padding: 13px 14px;
-    backdrop-filter: blur(10px);
+  .sheet {{
+    background: var(--color-sheet);
+    border: 1px solid var(--color-rule);
+    border-radius: var(--radius-lg);
+    padding: var(--space-md);
+    box-shadow: var(--shadow-sheet);
   }}
-  .card h2 {{
-    font-size: 12px;
-    font-weight: 600;
-    color: var(--ink);
-    margin-bottom: 8px;
+  .sheet h2 {{
+    font-family: var(--font-display);
+    font-size: 14px;
+    font-weight: 700;
+    letter-spacing: -0.015em;
+    color: var(--color-ink);
+    margin-bottom: var(--space-xs);
+    text-wrap: balance;
   }}
   .tour-body {{
-    font-size: 12px;
-    color: var(--muted);
+    font-size: 13px;
+    color: var(--color-ink-2);
     line-height: 1.48;
-    margin-bottom: 10px;
+    margin-bottom: var(--space-sm);
   }}
   .tour-nav {{
     display: flex;
     justify-content: space-between;
     align-items: center;
-    gap: 6px;
+    gap: var(--space-xs);
   }}
   .layer-list {{
     display: flex;
     flex-direction: column;
-    gap: 6px;
+    gap: var(--space-xs);
   }}
   .layer-row {{
     display: flex;
     align-items: center;
     justify-content: space-between;
-    font-size: 11.5px;
-    color: var(--muted);
+    font-size: 13px;
+    color: var(--color-ink-2);
   }}
   .dot {{
-    width: 9px;
-    height: 9px;
+    width: 10px;
+    height: 10px;
     border-radius: 2px;
     display: inline-block;
-    margin-right: 7px;
+    margin-right: var(--space-xs);
+    vertical-align: middle;
   }}
+
   .right-dock {{
     position: fixed;
-    top: 78px;
-    right: 16px;
-    width: 310px;
-    z-index: 10;
+    top: 80px;
+    right: var(--space-md);
+    width: 324px;
+    z-index: 100;
   }}
-  .kv-grid {{
+  /* Hairline stat row inside inspector — zero card-in-card */
+  .stat-row {{
     display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 8px;
-    margin: 10px 0;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    border-top: 1px solid var(--color-rule);
+    border-bottom: 1px solid var(--color-rule);
+    padding: var(--space-sm) 0;
+    margin: var(--space-sm) 0;
   }}
-  .kv {{
-    background: rgba(8, 17, 29, 0.72);
-    border: 1px solid var(--border);
-    border-radius: 6px;
-    padding: 7px 9px;
+  .stat-item {{
+    padding: 0 var(--space-xs);
+    border-left: 1px solid var(--color-rule);
   }}
-  .kv .v {{ font-size: 14px; font-weight: 600; color: var(--ink); }}
-  .kv .k {{ font-size: 10.5px; color: var(--muted); }}
+  .stat-item:first-child {{
+    padding-left: 0;
+    border-left: 0;
+  }}
+  .stat-item .v {{
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--color-ink);
+  }}
+  .stat-item .k {{
+    font-size: 11.5px;
+    color: var(--color-muted);
+  }}
+
   .dep-section {{
-    margin-top: 9px;
-    border-top: 1px solid var(--border);
-    padding-top: 8px;
+    margin-top: var(--space-sm);
   }}
   .dep-title {{
-    font-size: 11px;
+    font-size: 12px;
     font-weight: 600;
-    margin-bottom: 5px;
+    color: var(--color-muted);
+    margin-bottom: var(--space-2xs);
   }}
   .dep-chip {{
+    appearance: none;
+    border: 0;
     display: inline-block;
-    margin: 2px 4px 2px 0;
-    padding: 2px 7px;
-    border-radius: 4px;
-    font-size: 11px;
+    margin: var(--space-3xs) var(--space-2xs) var(--space-3xs) 0;
+    padding: var(--space-3xs) var(--space-xs);
+    border-radius: var(--radius-sm);
+    font-size: 12px;
     cursor: pointer;
-    background: rgba(56, 189, 248, 0.13);
-    color: var(--cyan);
+    background: var(--color-out-soft);
+    color: var(--color-out);
+    transition: transform var(--dur-micro) var(--ease-out);
   }}
+  .dep-chip:active {{ transform: scale(0.97); }}
   .dep-chip.in {{
-    background: rgba(251, 191, 36, 0.14);
-    color: var(--amber);
+    background: var(--color-in-soft);
+    color: var(--color-in);
+  }}
+
+  @media (prefers-reduced-motion: reduce) {{
+    .btn, .dep-chip {{ transition: opacity 150ms linear; transform: none !important; }}
   }}
 </style>
 </head>
 <body>
-<canvas id="iso-canvas"></canvas>
+<canvas id="iso-canvas" aria-label="Interactive 2.5D isometric codebase dependency maquette"></canvas>
 
-<div class="topbar">
+<header class="topbar">
   <div class="brand">
-    <div class="cube-badge mono">2.5D</div>
-    <div>
+    <div class="cube-badge mono" aria-hidden="true">2.5D</div>
+    <div class="brand-copy">
       <h1 id="proj-title"></h1>
       <p id="proj-sub"></p>
     </div>
   </div>
   <div class="controls">
-    <input class="search" id="search-box" type="text" placeholder="Filter module path..." />
-    <button class="btn" onclick="resetCamera()">Reset view</button>
+    <input class="search" id="search-box" name="module-filter" type="search" aria-label="Filter module path" placeholder="Filter module path…" />
+    <button type="button" class="btn" onclick="resetCamera()">Reset view</button>
+    <button type="button" class="btn" id="mode-btn" onclick="toggleMode()">Dark studio</button>
   </div>
-</div>
+</header>
 
-<div class="left-dock">
-  <div class="card" id="tour-card">
+<aside class="left-dock">
+  <section class="sheet" id="tour-card" aria-labelledby="tour-title">
     <h2 id="tour-title">Guided architecture tour</h2>
     <div class="tour-body" id="tour-text"></div>
     <div class="tour-nav">
-      <button class="btn" onclick="stepTour(-1)">Prev</button>
-      <span class="mono" style="font-size:11px;color:var(--muted)" id="tour-counter"></span>
-      <button class="btn" onclick="stepTour(1)">Next stop</button>
+      <button type="button" class="btn btn-sm" onclick="stepTour(-1)">Previous</button>
+      <span class="mono" style="font-size:12px;color:var(--color-muted)" id="tour-counter"></span>
+      <button type="button" class="btn btn-sm" onclick="stepTour(1)">Next stop</button>
     </div>
-  </div>
+  </section>
 
-  <div class="card">
-    <h2>Architectural districts &amp; arcs</h2>
+  <section class="sheet" aria-labelledby="legend-title">
+    <h2 id="legend-title">Architectural districts &amp; arcs</h2>
     <div class="layer-list" id="layer-legend"></div>
-    <div style="margin-top:9px;padding-top:8px;border-top:1px solid var(--border);font-size:11px;color:var(--muted);line-height:1.5">
-      <div><span class="dot" style="background:var(--cyan)"></span>Cyan arc: imports downstream module</div>
-      <div><span class="dot" style="background:var(--amber)"></span>Amber arc: depended on by caller</div>
-      <div style="margin-top:3px">Prism height = LOC, footprint = coupling</div>
+    <div style="margin-top:var(--space-sm);padding-top:var(--space-xs);border-top:1px solid var(--color-rule);font-size:12px;color:var(--color-muted);line-height:1.55">
+      <div><span class="dot" style="background:var(--color-out)"></span>Prussian arc: imports downstream</div>
+      <div><span class="dot" style="background:var(--color-in)"></span>Terracotta arc: depended on by caller</div>
+      <div style="margin-top:var(--space-2xs)">Height reflects LOC; base reflects coupling.</div>
     </div>
-  </div>
-</div>
+  </section>
+</aside>
 
-<div class="right-dock">
-  <div class="card" id="inspector-card"></div>
-</div>
+<aside class="right-dock">
+  <section class="sheet" id="inspector-card" aria-label="Selected module inspector"></section>
+</aside>
 
 <script>
 const GRAPH = {data_json};
@@ -738,16 +872,27 @@ const ctx = canvas.getContext("2d");
 const layerColor = Object.fromEntries((GRAPH.layers || []).map(l => [l.id, l.color]));
 const nodeById = Object.fromEntries((GRAPH.nodes || []).map(n => [n.id, n]));
 
-let camX = -14;
-let camY = 38;
-let zoom = 0.86;
+let camX = 32;
+let camY = 44;
+let zoom = 0.88;
 let selectedId = (GRAPH.tour && GRAPH.tour[0] && GRAPH.tour[0].module) || (GRAPH.nodes[0] && GRAPH.nodes[0].id) || null;
 let hoveredId = null;
 let tourIdx = 0;
 let searchTerm = "";
 let hitBoxes = [];
 
-document.getElementById("proj-title").textContent = `${{GRAPH.title}} — Code Anatomy`;
+function isDarkMode() {{
+  return document.documentElement.dataset.mode === "dark";
+}}
+
+function toggleMode() {{
+  const next = isDarkMode() ? "light" : "dark";
+  document.documentElement.dataset.mode = next;
+  document.getElementById("mode-btn").textContent = next === "dark" ? "Vellum light" : "Dark studio";
+  draw();
+}}
+
+document.getElementById("proj-title").textContent = `${{GRAPH.title}} · Code Anatomy`;
 document.getElementById("proj-sub").textContent = GRAPH.subtitle || "";
 
 document.getElementById("layer-legend").innerHTML = (GRAPH.layers || []).map(l => {{
@@ -772,8 +917,8 @@ function shadeHex(hex, pct) {{
 }}
 
 function projectIso(gx, gy, z, cx, cy) {{
-  const tileW = 48 * zoom;
-  const tileH = 25 * zoom;
+  const tileW = 50 * zoom;
+  const tileH = 26 * zoom;
   return {{
     x: cx + (gx - gy) * tileW,
     y: cy + (gx + gy) * tileH - z * zoom
@@ -786,21 +931,22 @@ function computeCenterOffset(w, h) {{
   const gys = GRAPH.nodes.map(n => n.gy);
   const midGX = (Math.min(...gxs) + Math.max(...gxs)) / 2;
   const midGY = (Math.min(...gys) + Math.max(...gys)) / 2;
-  const tileW = 48 * zoom;
-  const tileH = 25 * zoom;
+  const tileW = 50 * zoom;
+  const tileH = 26 * zoom;
   return {{
-    cx: w * 0.50 - (midGX - midGY) * tileW + camX,
-    cy: h * 0.53 - (midGX + midGY) * tileH + camY
+    cx: w * 0.485 - (midGX - midGY) * tileW + camX,
+    cy: h * 0.56 - (midGX + midGY) * tileH + camY
   }};
 }}
 
 function prismMetrics(n) {{
-  const h = Math.min(148, 22 + Math.sqrt(Math.max(1, n.loc)) * 4.8);
-  const half = Math.min(0.58, 0.34 + Math.min(8, n.fan_in + n.fan_out) * 0.025);
+  const h = Math.min(146, 24 + Math.sqrt(Math.max(1, n.loc)) * 4.6);
+  const half = Math.min(0.56, 0.34 + Math.min(8, n.fan_in + n.fan_out) * 0.024);
   return {{ h, half }};
 }}
 
 function draw() {{
+  const dark = isDarkMode();
   const dpr = window.devicePixelRatio || 1;
   const w = window.innerWidth;
   const h = window.innerHeight;
@@ -810,17 +956,22 @@ function draw() {{
   }}
   ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
 
-  // Blueprint midnight backdrop
-  const grad = ctx.createRadialGradient(w * 0.5, h * 0.45, 40, w * 0.5, h * 0.5, Math.max(w, h) * 0.75);
-  grad.addColorStop(0, "#0d1a2d");
-  grad.addColorStop(1, "#070d17");
+  // Architectural drafting surface (warm limestone vellum or obsidian studio)
+  const grad = ctx.createRadialGradient(w * 0.48, h * 0.46, 40, w * 0.5, h * 0.5, Math.max(w, h) * 0.78);
+  if (dark) {{
+    grad.addColorStop(0, "#1d1b19");
+    grad.addColorStop(1, "#131210");
+  }} else {{
+    grad.addColorStop(0, "#f8f6f0");
+    grad.addColorStop(1, "#ece7dc");
+  }}
   ctx.fillStyle = grad;
   ctx.fillRect(0, 0, w, h);
 
   const {{ cx, cy }} = computeCenterOffset(w, h);
 
-  // Subtle isometric drafting grid
-  ctx.strokeStyle = "rgba(96, 165, 250, 0.055)";
+  // Crisp isometric drafting hairlines
+  ctx.strokeStyle = dark ? "rgba(235, 228, 214, 0.055)" : "rgba(62, 54, 42, 0.075)";
   ctx.lineWidth = 1;
   for (let i = -6; i <= 18; i++) {{
     const a = projectIso(i, -4, 0, cx, cy);
@@ -831,7 +982,7 @@ function draw() {{
     ctx.beginPath(); ctx.moveTo(c.x, c.y); ctx.lineTo(d.x, d.y); ctx.stroke();
   }}
 
-  // District lane pads & labels
+  // Architectural district plinths & labels
   for (const layer of (GRAPH.layers || [])) {{
     const colNodes = GRAPH.nodes.filter(n => n.layer === layer.id);
     if (!colNodes.length) continue;
@@ -845,15 +996,15 @@ function draw() {{
     ctx.moveTo(p0.x, p0.y); ctx.lineTo(p1.x, p1.y);
     ctx.lineTo(p2.x, p2.y); ctx.lineTo(p3.x, p3.y);
     ctx.closePath();
-    ctx.fillStyle = "rgba(19, 32, 52, 0.50)";
+    ctx.fillStyle = dark ? "rgba(255, 250, 240, 0.03)" : "rgba(255, 253, 248, 0.56)";
     ctx.fill();
-    ctx.strokeStyle = layer.color + "44";
+    ctx.strokeStyle = dark ? "rgba(235, 228, 214, 0.14)" : "rgba(62, 54, 42, 0.16)";
     ctx.lineWidth = 1;
     ctx.stroke();
 
-    const lblPt = projectIso(layer.gx, maxGY + 0.58, 0, cx, cy);
-    ctx.font = `600 ${{Math.max(10, 11 * zoom)}}px -apple-system, BlinkMacSystemFont, sans-serif`;
-    ctx.fillStyle = layer.color;
+    const lblPt = projectIso(layer.gx, maxGY + 0.62, 0, cx, cy);
+    ctx.font = `600 ${{Math.max(10.5, 11.5 * zoom)}}px -apple-system, BlinkMacSystemFont, sans-serif`;
+    ctx.fillStyle = dark ? "#c9c2b6" : "#4b453d";
     ctx.textAlign = "center";
     ctx.fillText(layer.name, lblPt.x, lblPt.y);
   }}
@@ -866,24 +1017,24 @@ function draw() {{
     if (e.to === activeFocus) inPeers.add(e.from);
   }}
 
-  // Painter's sort back-to-front by (gx + gy)
   const sorted = [...GRAPH.nodes].sort((a, b) => (a.gx + a.gy) - (b.gx + b.gy));
   hitBoxes = [];
   const roofAnchors = {{}};
 
   for (const n of sorted) {{
     const {{ h: bh, half }} = prismMetrics(n);
-    const baseCol = layerColor[n.layer] || "#38bdf8";
+    const baseCol = layerColor[n.layer] || "#2B5B84";
     const isFocused = n.id === activeFocus;
     const isPeer = outPeers.has(n.id) || inPeers.has(n.id);
     const matchesSearch = !searchTerm || n.id.toLowerCase().includes(searchTerm);
-    const alpha = (!matchesSearch || (activeFocus && !isFocused && !isPeer)) ? 0.34 : 1.0;
+    const alpha = (!matchesSearch || (activeFocus && !isFocused && !isPeer)) ? 0.36 : 1.0;
 
     const t0 = projectIso(n.gx - half, n.gy - half, bh, cx, cy);
     const t1 = projectIso(n.gx + half, n.gy - half, bh, cx, cy);
     const t2 = projectIso(n.gx + half, n.gy + half, bh, cx, cy);
     const t3 = projectIso(n.gx - half, n.gy + half, bh, cx, cy);
 
+    const b0 = projectIso(n.gx - half, n.gy - half, 0, cx, cy);
     const b1 = projectIso(n.gx + half, n.gy - half, 0, cx, cy);
     const b2 = projectIso(n.gx + half, n.gy + half, 0, cx, cy);
     const b3 = projectIso(n.gx - half, n.gy + half, 0, cx, cy);
@@ -893,49 +1044,56 @@ function draw() {{
     ctx.save();
     ctx.globalAlpha = alpha;
 
-    // Base glow for focused prism
+    // Ground contact shadow / focused footprint plinth
+    ctx.beginPath();
+    const pad = isFocused ? 1.32 : 1.12;
+    const s0 = projectIso(n.gx - half * pad, n.gy - half * pad, 0, cx, cy);
+    const s1 = projectIso(n.gx + half * pad, n.gy - half * pad, 0, cx, cy);
+    const s2 = projectIso(n.gx + half * pad, n.gy + half * pad, 0, cx, cy);
+    const s3 = projectIso(n.gx - half * pad, n.gy + half * pad, 0, cx, cy);
+    ctx.moveTo(s0.x, s0.y); ctx.lineTo(s1.x, s1.y); ctx.lineTo(s2.x, s2.y); ctx.lineTo(s3.x, s3.y);
+    ctx.closePath();
     if (isFocused) {{
-      ctx.beginPath();
-      const g0 = projectIso(n.gx - half * 1.35, n.gy - half * 1.35, 0, cx, cy);
-      const g1 = projectIso(n.gx + half * 1.35, n.gy - half * 1.35, 0, cx, cy);
-      const g2 = projectIso(n.gx + half * 1.35, n.gy + half * 1.35, 0, cx, cy);
-      const g3 = projectIso(n.gx - half * 1.35, n.gy + half * 1.35, 0, cx, cy);
-      ctx.moveTo(g0.x, g0.y); ctx.lineTo(g1.x, g1.y); ctx.lineTo(g2.x, g2.y); ctx.lineTo(g3.x, g3.y);
-      ctx.closePath();
-      ctx.fillStyle = "rgba(56, 189, 248, 0.25)";
+      ctx.fillStyle = dark ? "rgba(224, 108, 62, 0.24)" : "rgba(200, 90, 50, 0.18)";
+      ctx.fill();
+      ctx.strokeStyle = dark ? "#e06c3e" : "#c85a32";
+      ctx.lineWidth = 1.5;
+      ctx.stroke();
+    }} else {{
+      ctx.fillStyle = dark ? "rgba(0, 0, 0, 0.34)" : "rgba(42, 35, 26, 0.10)";
       ctx.fill();
     }}
 
-    // Left face (t3 -> t2 -> b2 -> b3)
+    // Left sunlit-side stone facade
     ctx.beginPath();
     ctx.moveTo(t3.x, t3.y); ctx.lineTo(t2.x, t2.y);
     ctx.lineTo(b2.x, b2.y); ctx.lineTo(b3.x, b3.y);
     ctx.closePath();
-    ctx.fillStyle = shadeHex(baseCol, -36);
+    ctx.fillStyle = shadeHex(baseCol, dark ? -14 : 6);
     ctx.fill();
 
-    // Right face (t2 -> t1 -> b1 -> b2)
+    // Right shaded stone facade
     ctx.beginPath();
     ctx.moveTo(t2.x, t2.y); ctx.lineTo(t1.x, t1.y);
     ctx.lineTo(b1.x, b1.y); ctx.lineTo(b2.x, b2.y);
     ctx.closePath();
-    ctx.fillStyle = shadeHex(baseCol, -68);
+    ctx.fillStyle = shadeHex(baseCol, dark ? -46 : -26);
     ctx.fill();
 
-    // Top roof face
+    // Top architectural roof cap
     ctx.beginPath();
     ctx.moveTo(t0.x, t0.y); ctx.lineTo(t1.x, t1.y);
     ctx.lineTo(t2.x, t2.y); ctx.lineTo(t3.x, t3.y);
     ctx.closePath();
-    ctx.fillStyle = isFocused ? "#eef6ff" : shadeHex(baseCol, 18);
+    ctx.fillStyle = isFocused ? (dark ? "#faf6ee" : "#ffffff") : shadeHex(baseCol, 34);
     ctx.fill();
-    ctx.strokeStyle = isFocused ? "#38bdf8" : "rgba(255,255,255,0.28)";
+    ctx.strokeStyle = isFocused ? "#c85a32" : (dark ? "rgba(255,255,255,0.22)" : "rgba(28,24,20,0.22)");
     ctx.lineWidth = isFocused ? 2 : 1;
     ctx.stroke();
 
     ctx.restore();
 
-    const minX = Math.min(t3.x, t0.x);
+    const minX = Math.min(t3.x, b0.x);
     const maxX = Math.max(t1.x, b1.x);
     const minY = t0.y;
     const maxY = b2.y;
@@ -943,6 +1101,8 @@ function draw() {{
   }}
 
   // Overhead Bezier dependency arcs
+  const outStroke = dark ? "#68a6d8" : "#2B5B84";
+  const inStroke = dark ? "#e57a4e" : "#C85A32";
   for (const e of GRAPH.edges) {{
     const a = roofAnchors[e.from];
     const b = roofAnchors[e.to];
@@ -950,18 +1110,18 @@ function draw() {{
     const isOut = e.from === activeFocus;
     const isIn = e.to === activeFocus;
     if (activeFocus && !isOut && !isIn) {{
-      ctx.strokeStyle = "rgba(136, 158, 184, 0.13)";
+      ctx.strokeStyle = dark ? "rgba(220, 212, 198, 0.10)" : "rgba(62, 54, 42, 0.12)";
       ctx.lineWidth = 1;
     }} else if (isOut) {{
-      ctx.strokeStyle = "#38bdf8";
-      ctx.lineWidth = 2.2;
+      ctx.strokeStyle = outStroke;
+      ctx.lineWidth = 2.1;
     }} else {{
-      ctx.strokeStyle = "#fbbf24";
-      ctx.lineWidth = 2.2;
+      ctx.strokeStyle = inStroke;
+      ctx.lineWidth = 2.1;
     }}
     const dist = Math.hypot(b.x - a.x, b.y - a.y);
     const ctrlX = (a.x + b.x) / 2;
-    const ctrlY = Math.min(a.y, b.y) - Math.max(36, dist * 0.24);
+    const ctrlY = Math.min(a.y, b.y) - Math.max(38, dist * 0.25);
     ctx.beginPath();
     ctx.moveTo(a.x, a.y);
     ctx.quadraticCurveTo(ctrlX, ctrlY, b.x, b.y);
@@ -970,12 +1130,13 @@ function draw() {{
     if (isOut || isIn) {{
       ctx.beginPath();
       ctx.arc(b.x, b.y, 3.2, 0, Math.PI * 2);
-      ctx.fillStyle = isOut ? "#38bdf8" : "#fbbf24";
+      ctx.fillStyle = isOut ? outStroke : inStroke;
       ctx.fill();
     }}
   }}
 
-  // Clean rooftop callout badges for focused + peer + top hub modules
+  // Collision-free rooftop callout pins (2D bounding-box relaxation + vertical leader stems)
+  const labelItems = [];
   for (const n of sorted) {{
     const isFocused = n.id === activeFocus;
     const isPeer = outPeers.has(n.id) || inPeers.has(n.id);
@@ -983,22 +1144,75 @@ function draw() {{
     const pt = roofAnchors[n.id];
     if (!pt) continue;
     const text = n.label;
-    ctx.font = `${{isFocused ? "600" : "500"}} 11px "SF Mono", ui-monospace, monospace`;
-    const tw = ctx.measureText(text).width + 12;
-    const bx = pt.x - tw / 2;
-    const by = pt.y - 24;
+    ctx.font = `${{isFocused ? "700" : "500"}} 11px "SF Mono", ui-monospace, monospace`;
+    const tw = ctx.measureText(text).width + 14;
+    const th = 20;
+    labelItems.push({{
+      id: n.id,
+      text,
+      isFocused,
+      anchorX: pt.x,
+      anchorY: pt.y,
+      x: pt.x - tw / 2,
+      y: pt.y - (isFocused ? 34 : 26),
+      w: tw,
+      h: th,
+    }});
+  }}
 
-    ctx.fillStyle = isFocused ? "rgba(14, 26, 44, 0.96)" : "rgba(10, 18, 30, 0.84)";
-    ctx.strokeStyle = isFocused ? "#38bdf8" : "rgba(136, 158, 184, 0.38)";
-    ctx.lineWidth = 1;
+  // Relax vertical collisions so callouts never overlap
+  labelItems.sort((a, b) => b.y - a.y);
+  for (let pass = 0; pass < 4; pass++) {{
+    for (let i = 0; i < labelItems.length; i++) {{
+      for (let j = i + 1; j < labelItems.length; j++) {{
+        const low = labelItems[i];
+        const high = labelItems[j];
+        const xOverlap = Math.min(low.x + low.w, high.x + high.w) - Math.max(low.x, high.x);
+        const yOverlap = Math.min(low.y + low.h, high.y + high.h) - Math.max(low.y, high.y);
+        if (xOverlap > -6 && yOverlap > -4) {{
+          high.y -= (yOverlap + 6);
+        }}
+      }}
+    }}
+  }}
+
+  // Draw leader stems first, then crisp callout tags
+  for (const item of labelItems) {{
+    const stemBottomY = item.anchorY - 2;
+    const stemTopY = item.y + item.h;
+    if (stemBottomY > stemTopY + 2) {{
+      ctx.beginPath();
+      ctx.moveTo(item.anchorX, stemBottomY);
+      ctx.lineTo(item.anchorX, stemTopY);
+      ctx.strokeStyle = item.isFocused
+        ? (dark ? "#e57a4e" : "#c85a32")
+        : (dark ? "rgba(220,212,198,0.42)" : "rgba(55,48,38,0.36)");
+      ctx.lineWidth = 1;
+      ctx.stroke();
+    }}
+  }}
+
+  for (const item of labelItems) {{
+    ctx.font = `${{item.isFocused ? "700" : "500"}} 11px "SF Mono", ui-monospace, monospace`;
+    if (item.isFocused) {{
+      ctx.fillStyle = dark ? "#faf6ee" : "#1f1c19";
+      ctx.strokeStyle = dark ? "#e57a4e" : "#c85a32";
+      ctx.lineWidth = 1.5;
+    }} else {{
+      ctx.fillStyle = dark ? "rgba(32, 29, 26, 0.92)" : "rgba(252, 250, 245, 0.94)";
+      ctx.strokeStyle = dark ? "rgba(220, 212, 198, 0.28)" : "rgba(55, 48, 38, 0.24)";
+      ctx.lineWidth = 1;
+    }}
     ctx.beginPath();
-    ctx.roundRect(bx, by, tw, 18, 4);
+    ctx.roundRect(item.x, item.y, item.w, item.h, 4);
     ctx.fill();
     ctx.stroke();
 
-    ctx.fillStyle = isFocused ? "#ffffff" : "#dbe7f5";
+    ctx.fillStyle = item.isFocused
+      ? (dark ? "#191715" : "#faf8f3")
+      : (dark ? "#ede8de" : "#26221e");
     ctx.textAlign = "center";
-    ctx.fillText(text, pt.x, by + 12.5);
+    ctx.fillText(item.text, item.x + item.w / 2, item.y + 13.5);
   }}
 }}
 
@@ -1008,7 +1222,7 @@ function updateHUD() {{
     const stop = tour[tourIdx % tour.length];
     document.getElementById("tour-title").textContent = stop.title;
     document.getElementById("tour-text").textContent = stop.body;
-    document.getElementById("tour-counter").textContent = `${{(tourIdx % tour.length) + 1}} / ${{tour.length}}`;
+    document.getElementById("tour-counter").textContent = `${{(tourIdx % tour.length) + 1}} of ${{tour.length}}`;
   }} else {{
     document.getElementById("tour-card").style.display = "none";
   }}
@@ -1023,31 +1237,31 @@ function updateHUD() {{
   const ins = GRAPH.edges.filter(e => e.to === cur.id).map(e => e.from);
 
   const outHtml = outs.length
-    ? outs.map(id => `<span class="dep-chip mono" onclick="focusModule('${{escapeJs(id)}}')">${{escapeHtml(nodeById[id]?.label || id)}}</span>`).join("")
-    : `<span style="color:var(--muted);font-size:11px">None (leaf module)</span>`;
+    ? outs.map(id => `<button type="button" class="dep-chip mono" onclick="focusModule('${{escapeJs(id)}}')">${{escapeHtml(nodeById[id]?.label || id)}}</button>`).join("")
+    : `<span style="color:var(--color-muted);font-size:12px">None (leaf module)</span>`;
   const inHtml = ins.length
-    ? ins.map(id => `<span class="dep-chip in mono" onclick="focusModule('${{escapeJs(id)}}')">${{escapeHtml(nodeById[id]?.label || id)}}</span>`).join("")
-    : `<span style="color:var(--muted);font-size:11px">None (top-level entrypoint)</span>`;
+    ? ins.map(id => `<button type="button" class="dep-chip in mono" onclick="focusModule('${{escapeJs(id)}}')">${{escapeHtml(nodeById[id]?.label || id)}}</button>`).join("")
+    : `<span style="color:var(--color-muted);font-size:12px">None (top-level entrypoint)</span>`;
 
   card.innerHTML = `
     <div style="display:flex;justify-content:space-between;align-items:baseline;gap:8px">
-      <h2 style="margin:0;font-size:13.5px">${{escapeHtml(cur.label)}}</h2>
-      <span class="mono" style="font-size:11px;color:${{layerColor[cur.layer] || '#38bdf8'}}">${{escapeHtml(cur.layer)}}</span>
+      <h2 style="margin:0;font-size:15px">${{escapeHtml(cur.label)}}</h2>
+      <span class="mono" style="font-size:12px;font-weight:600;color:${{layerColor[cur.layer] || 'var(--color-out)'}}">${{escapeHtml(cur.layer)}}</span>
     </div>
-    <div class="mono" style="font-size:10.5px;color:var(--muted);margin:3px 0 8px;word-break:break-all">${{escapeHtml(cur.id)}}</div>
-    <div style="font-size:12px;color:#cbd8e8;line-height:1.45">${{escapeHtml(cur.summary)}}</div>
-    <div class="kv-grid">
-      <div class="kv"><div class="v mono">${{cur.loc}}</div><div class="k">Code lines (LOC)</div></div>
-      <div class="kv"><div class="v mono">${{cur.symbols}}</div><div class="k">Declared symbols</div></div>
-      <div class="kv"><div class="v mono" style="color:var(--amber)">${{cur.fan_in}}</div><div class="k">Dependents (fan-in)</div></div>
-      <div class="kv"><div class="v mono" style="color:var(--cyan)">${{cur.fan_out}}</div><div class="k">Imports (fan-out)</div></div>
+    <div class="mono" style="font-size:11.5px;color:var(--color-muted);margin:4px 0 8px;word-break:break-all">${{escapeHtml(cur.id)}}</div>
+    <div style="font-size:13px;color:var(--color-ink-2);line-height:1.48">${{escapeHtml(cur.summary)}}</div>
+    <div class="stat-row">
+      <div class="stat-item"><div class="v mono">${{cur.loc}}</div><div class="k">LOC</div></div>
+      <div class="stat-item"><div class="v mono">${{cur.symbols}}</div><div class="k">Symbols</div></div>
+      <div class="stat-item"><div class="v mono" style="color:var(--color-in)">${{cur.fan_in}}</div><div class="k">Fan-in</div></div>
+      <div class="stat-item"><div class="v mono" style="color:var(--color-out)">${{cur.fan_out}}</div><div class="k">Fan-out</div></div>
     </div>
     <div class="dep-section">
-      <div class="dep-title" style="color:var(--cyan)">Imports (${{outs.length}})</div>
+      <div class="dep-title">Imports (${{outs.length}})</div>
       <div>${{outHtml}}</div>
     </div>
     <div class="dep-section">
-      <div class="dep-title" style="color:var(--amber)">Depended on by (${{ins.length}})</div>
+      <div class="dep-title">Depended on by (${{ins.length}})</div>
       <div>${{inHtml}}</div>
     </div>
   `;
@@ -1069,9 +1283,9 @@ function stepTour(delta) {{
 }}
 
 function resetCamera() {{
-  camX = -14;
-  camY = 38;
-  zoom = 0.86;
+  camX = 32;
+  camY = 44;
+  zoom = 0.88;
   draw();
 }}
 
